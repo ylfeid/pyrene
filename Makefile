@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
-CC       := /opt/homebrew/opt/llvm/bin/clang
+LLVM     := /opt/homebrew/opt/llvm/bin
+CC       := $(LLVM)/clang
+OBJCOPY  := $(LLVM)/llvm-objcopy
 LD       := ld.lld
 TARGET   := --target=aarch64-none-elf
 
@@ -15,7 +17,12 @@ SRCS     := arch/aarch64/boot.S \
 OBJS     := $(addprefix build/,$(addsuffix .o,$(basename $(SRCS))))
 LDSCRIPT := arch/aarch64/linker.ld
 
-all: build/kernel.elf
+QEMU     := qemu-system-aarch64 -machine virt -cpu cortex-a53 -smp 4 -m 512M -nographic
+
+all: build/Image
+
+build/Image: build/kernel.elf
+	$(OBJCOPY) -O binary $< $@
 
 build/kernel.elf: $(OBJS) $(LDSCRIPT)
 	$(LD) -T $(LDSCRIPT) -o $@ $(OBJS)
@@ -28,13 +35,17 @@ build/%.o: %.S
 	@mkdir -p $(dir $@)
 	$(CC) $(ASFLAGS) -c $< -o $@
 
-run: build/kernel.elf
-	qemu-system-aarch64 -machine virt -cpu cortex-a53 -smp 4 -m 512M \
-		-nographic -kernel $<
+run: build/Image
+	$(QEMU) -kernel $<
+
+dumpdtb:
+	@mkdir -p build
+	$(QEMU) -machine dumpdtb=build/virt.dtb
+	dtc -I dtb -O dts build/virt.dtb -o build/virt.dts
 
 clean:
 	rm -rf build
 
 -include $(OBJS:.o=.d)
 
-.PHONY: all run clean
+.PHONY: all run dumpdtb clean

@@ -23,4 +23,7 @@ SECTIONS
     . = ALIGN(16);
     . += 0x4000;
     __stack_top = .;
+
+    __kernel_end = .;
+    __image_size = __kernel_end - _start;
 }
