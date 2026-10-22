@@ -1,40 +1,29 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include <stdint.h>
+#include "pl011.h"
+#include "printk.h"
 
-#define UART0       0x09000000UL
-#define UART_DR     0x00
-#define UART_FR     0x18
-#define FR_TXFF     (1u << 5)
+extern char _start[], __bss_start[], __bss_end[], __stack_top[];
 
-static inline void mmio_write32(uintptr_t addr, uint32_t val)
+static unsigned current_el(void)
 {
-    *(volatile uint32_t *)addr = val;
-}
-
-static inline uint32_t mmio_read32(uintptr_t addr)
-{
-    return *(volatile uint32_t *)addr;
-}
-
-static void uart_putc(char c)
-{
-    while (mmio_read32(UART0 + UART_FR) & FR_TXFF)
-        ;
-    mmio_write32(UART0 + UART_DR, (uint32_t)c);
-}
-
-static void uart_puts(const char *s)
-{
-    while (*s) {
-        if (*s == '\n')
-            uart_putc('\r');
-        uart_putc(*s++);
-    }
+    uint64_t el;
+    __asm__ volatile("mrs %0, CurrentEL" : "=r"(el));
+    return (el >> 2) & 3;
 }
 
 void kernel_main(void)
 {
-    uart_puts("pyrene: hello from bare metal\n");
+    pl011_init(0x09000000);
+
+    printk("pyrene booting\n");
+    printk("  exception level: EL%u\n", current_el());
+    printk("  kernel start:    %p\n", (void *)_start);
+    printk("  bss:             %p - %p\n", (void *)__bss_start, (void *)__bss_end);
+    printk("  stack top:       %p\n", (void *)__stack_top);
+    printk("  printk test:     %d %u %x %08x %lx %s %c %%\n",
+           -42, 42u, 0xbeefu, 0x1234u, 0xdeadbeefcafeUL, "ok", '!');
+
     for (;;)
         __asm__ volatile("wfe");
 }
