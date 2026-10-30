@@ -45,11 +45,8 @@ static void out_num(uint64_t val, unsigned base, bool upper, bool neg,
         out_char(buf[i]);
 }
 
-void printk(const char *fmt, ...)
+void vprintk(const char *fmt, va_list ap)
 {
-    va_list ap;
-    va_start(ap, fmt);
-
     for (; *fmt; fmt++) {
         if (*fmt != '%') {
             out_char(*fmt);
@@ -108,13 +105,20 @@ void printk(const char *fmt, ...)
             out_char('%');
             break;
         case '\0':
-            goto done;
+            return;
         default:
             out_char('%');
             out_char(*fmt);
             break;
         }
     }
-done:
+}
+
+void printk(const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    vprintk(fmt, ap);
     va_end(ap);
 }
