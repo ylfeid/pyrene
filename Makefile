@@ -5,13 +5,16 @@ OBJCOPY  := $(LLVM)/llvm-objcopy
 LD       := ld.lld
 TARGET   := --target=aarch64-none-elf
 
-CFLAGS   := $(TARGET) -std=gnu11 -ffreestanding -nostdlib -mgeneral-regs-only \
+CFLAGS   := $(TARGET) -std=gnu11 -ffreestanding -fno-builtin -nostdlib -mgeneral-regs-only \
             -Wall -Wextra -Werror -O2 -g -Iinclude -MMD -MP
 ASFLAGS  := $(TARGET) -g -Iinclude -MMD -MP
 
 SRCS     := arch/aarch64/boot.S \
             kernel/main.c \
             kernel/printk.c \
+            kernel/devicetree.c \
+            lib/fdt.c \
+            lib/string.c \
             drivers/serial/pl011.c
 
 OBJS     := $(addprefix build/,$(addsuffix .o,$(basename $(SRCS))))
