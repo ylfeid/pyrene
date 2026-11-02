@@ -16,7 +16,10 @@ Exit QEMU with Ctrl-A, then X.
 - [x] Boot, early UART console
 - [x] printk
 - [x] Devicetree parsing (RAM, CPUs, UART)
-- [ ] Exception vectors
+- [ ] Exceptions
+  - [x] Vector table and register save/restore
+  - [ ] Syndrome decoding and register dump
+  - [ ] Backtrace
 - [ ] Physical memory allocator
 - [ ] Virtual memory (MMU)
 - [ ] riscv64 port
