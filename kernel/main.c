@@ -4,6 +4,7 @@
 #include "panic.h"
 #include "pl011.h"
 #include "printk.h"
+#include "sysreg.h"
 
 #define EARLY_UART  0x09000000UL
 
@@ -11,10 +12,7 @@ extern char _start[], __kernel_end[];
 
 static unsigned current_el(void)
 {
-    uint64_t el;
-
-    __asm__ volatile("mrs %0, CurrentEL" : "=r"(el));
-    return (el >> 2) & 3;
+    return (read_sysreg(CurrentEL) >> 2) & 3;
 }
 
 static void halt(void)
