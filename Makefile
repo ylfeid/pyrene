@@ -12,6 +12,7 @@ ASFLAGS  := $(TARGET) -g -Iinclude -MMD -MP
 SRCS     := arch/aarch64/boot.S \
             kernel/main.c \
             kernel/printk.c \
+			kernel/panic.c \
             kernel/devicetree.c \
             lib/fdt.c \
             lib/string.c \
