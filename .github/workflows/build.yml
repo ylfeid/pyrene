@@ -1,0 +1,25 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  aarch64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang lld llvm qemu-system-arm
+
+      - name: Locate LLVM
+        run: echo "LLVM=$(dirname "$(readlink -f "$(which clang)")")" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: make
+
+      - name: Boot test
+        run: make itest
