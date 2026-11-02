@@ -8,13 +8,6 @@ Written from scratch in C for aarch64 and riscv64.
 
 Early bring-up. Boots on QEMU `virt` (aarch64), reads its hardware layout from the devicetree.
 
-## Build and run
-
-    brew install llvm lld qemu dtc
-    make run
-
-Exit QEMU with Ctrl-A, then X.
-
 ## Milestones
 
 - [x] Boot, early UART console
