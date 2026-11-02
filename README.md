@@ -1,4 +1,8 @@
-Small, portable OS kernel written from scratch in C for aarch64 and riscv64.
+# Pyrene
+
+From the ancient greek πυρήν - core, kernel. 
+
+Written from scratch in C for aarch64 and riscv64.
 
 ## Status
 
