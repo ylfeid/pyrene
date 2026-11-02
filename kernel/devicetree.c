@@ -8,6 +8,7 @@ struct dt_state {
     struct dt_info *info;
     int is_memory;
     int is_uart;
+    int is_chosen;
     int have_reg;
     uint64_t reg_base;
 };
@@ -25,6 +26,7 @@ static int on_node(void *arg, const struct fdt_node *node)
 
     st->is_memory = node->depth == 1 && name_is(node->name, "memory");
     st->is_uart = 0;
+    st->is_chosen = node->depth == 1 && name_is(node->name, "chosen");
     st->have_reg = 0;
 
     if (node->depth == 2 && !strncmp(node->name, "cpu@", 4))
@@ -37,6 +39,13 @@ static int on_prop(void *arg, const struct fdt_node *node, const char *name,
 {
     struct dt_state *st = arg;
     struct dt_info *info = st->info;
+    
+    if (st->is_chosen) {
+        if (!strcmp(name, "bootargs"))
+            info->bootargs = data;
+        else if (!strcmp(name, "stdout-path"))
+            info->stdout_path = data;
+    }
 
     if (!strcmp(name, "reg")) {
         unsigned a = node->parent_addr_cells;

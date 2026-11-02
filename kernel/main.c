@@ -41,6 +41,12 @@ void kernel_main(uintptr_t dtb)
         pl011_init(info.uart_base);
 
     printk("  console:         pl011 @ %p\n", (void *)(uintptr_t)info.uart_base);
+
+    if (info.stdout_path)
+        printk("  stdout-path:     %s\n", info.stdout_path);
+    if (info.bootargs)
+        printk("  bootargs:        %s\n", info.bootargs);
+        
     printk("  cpus:            %u\n", info.ncpus);
     for (unsigned i = 0; i < info.nram; i++)
         printk("  ram:             %p - %p (%lu MiB)\n",

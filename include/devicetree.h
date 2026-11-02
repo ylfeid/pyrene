@@ -17,6 +17,8 @@ struct dt_info {
     unsigned ncpus;
     int has_uart;
     uint64_t uart_base;
+    const char *bootargs;
+    const char *stdout_path;
 };
 
 int dt_parse(const void *fdt, struct dt_info *info);
