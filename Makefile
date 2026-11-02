@@ -42,6 +42,9 @@ build/%.o: %.S
 run: build/Image
 	$(QEMU) -kernel $<
 
+itest: build/Image
+	@sh tools/itest.sh
+
 dumpdtb:
 	@mkdir -p build
 	$(QEMU) -machine dumpdtb=build/virt.dtb
@@ -53,3 +56,4 @@ clean:
 -include $(OBJS:.o=.d)
 
 .PHONY: all run dumpdtb clean
+.PHONY: all run itest dumpdtb clean
