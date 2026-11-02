@@ -4,6 +4,7 @@
 #include "panic.h"
 #include "pl011.h"
 #include "printk.h"
+#include "trap.h"
 #include "sysreg.h"
 
 #define EARLY_UART  0x09000000UL
@@ -26,6 +27,7 @@ void kernel_main(uintptr_t dtb)
     struct dt_info info;
 
     pl011_init(EARLY_UART);
+    exceptions_init();
 
     printk("pyrene booting\n");
     printk("  exception level: EL%u\n", current_el());

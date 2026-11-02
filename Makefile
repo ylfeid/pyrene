@@ -10,6 +10,8 @@ CFLAGS   := $(TARGET) -std=gnu11 -ffreestanding -fno-builtin -nostdlib -mgeneral
 ASFLAGS  := $(TARGET) -g -Iinclude -MMD -MP
 
 SRCS     := arch/aarch64/boot.S \
+			arch/aarch64/vectors.S \
+			arch/aarch64/trap.c \
             kernel/main.c \
             kernel/printk.c \
 			kernel/panic.c \
