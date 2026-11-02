@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include <stdint.h>
 #include "devicetree.h"
+#include "panic.h"
 #include "pl011.h"
 #include "printk.h"
 
@@ -32,11 +33,9 @@ void kernel_main(uintptr_t dtb)
     printk("  exception level: EL%u\n", current_el());
     printk("  kernel image:    %p - %p\n", (void *)_start, (void *)__kernel_end);
     printk("  dtb:             %p\n", (void *)dtb);
-
-    if (dt_parse((const void *)dtb, &info)) {
-        printk("  dtb invalid, nothing more to do\n");
-        halt();
-    }
+    
+    if (dt_parse((const void *)dtb, &info))
+        panic("invalid devicetree at %p", (void *)dtb);
 
     if (info.has_uart)
         pl011_init(info.uart_base);
