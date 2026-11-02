@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-only
-LLVM     := /opt/homebrew/opt/llvm/bin
+LLVM     ?= /opt/homebrew/opt/llvm/bin
 CC       := $(LLVM)/clang
 OBJCOPY  := $(LLVM)/llvm-objcopy
 LD       := ld.lld
