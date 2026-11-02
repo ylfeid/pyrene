@@ -119,3 +119,18 @@ int fdt_walk(const void *fdt, fdt_node_fn on_node, fdt_prop_fn on_prop, void *ar
     }
     return -1;
 }
+
+int fdt_memreserve(const void *fdt, unsigned idx, uint64_t *addr, uint64_t *size)
+{
+    const struct fdt_header *h = fdt;
+    uint32_t off = fdt32_to_cpu(h->off_mem_rsvmap) + idx * 16;
+    const uint32_t *p;
+
+    if (off + 16 > fdt32_to_cpu(h->totalsize))
+        return -1;
+
+    p = (const uint32_t *)((const char *)fdt + off);
+    *addr = fdt_read_cells(p, 2);
+    *size = fdt_read_cells(p + 2, 2);
+    return (*addr || *size) ? 0 : -1;
+}

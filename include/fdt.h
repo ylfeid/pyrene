@@ -45,3 +45,4 @@ int fdt_check(const void *fdt);
 int fdt_walk(const void *fdt, fdt_node_fn on_node, fdt_prop_fn on_prop, void *arg);
 uint64_t fdt_read_cells(const void *data, unsigned cells);
 int fdt_compatible(const void *data, uint32_t len, const char *compat);
+int fdt_memreserve(const void *fdt, unsigned idx, uint64_t *addr, uint64_t *size);
