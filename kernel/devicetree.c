@@ -70,9 +70,18 @@ static int on_prop(void *arg, const struct fdt_node *node, const char *name,
 int dt_parse(const void *fdt, struct dt_info *info)
 {
     struct dt_state st = { .info = info };
+    uint64_t addr, size;
 
     memset(info, 0, sizeof(*info));
     if (fdt_check(fdt))
         return -1;
+
+    for (unsigned i = 0; info->nreserved < DT_MAX_REGIONS &&
+                         !fdt_memreserve(fdt, i, &addr, &size); i++) {
+        info->reserved[info->nreserved].base = addr;
+        info->reserved[info->nreserved].size = size;
+        info->nreserved++;
+    }
+
     return fdt_walk(fdt, on_node, on_prop, &st);
 }

@@ -12,6 +12,8 @@ struct dt_region {
 struct dt_info {
     struct dt_region ram[DT_MAX_REGIONS];
     unsigned nram;
+    struct dt_region reserved[DT_MAX_REGIONS];
+    unsigned nreserved;
     unsigned ncpus;
     int has_uart;
     uint64_t uart_base;

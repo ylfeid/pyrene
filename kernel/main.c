@@ -33,7 +33,7 @@ void kernel_main(uintptr_t dtb)
     printk("  exception level: EL%u\n", current_el());
     printk("  kernel image:    %p - %p\n", (void *)_start, (void *)__kernel_end);
     printk("  dtb:             %p\n", (void *)dtb);
-    
+
     if (dt_parse((const void *)dtb, &info))
         panic("invalid devicetree at %p", (void *)dtb);
 
@@ -47,6 +47,11 @@ void kernel_main(uintptr_t dtb)
                (void *)(uintptr_t)info.ram[i].base,
                (void *)(uintptr_t)(info.ram[i].base + info.ram[i].size),
                info.ram[i].size >> 20);
-
+    if (!info.nreserved)
+        printk("  reserved:        none\n");
+    for (unsigned i = 0; i < info.nreserved; i++)
+        printk("  reserved:        %p - %p\n",
+               (void *)(uintptr_t)info.reserved[i].base,
+               (void *)(uintptr_t)(info.reserved[i].base + info.reserved[i].size));
     halt();
 }
