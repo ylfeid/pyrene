@@ -36,6 +36,8 @@ primary:
     str     xzr, [x1], #8
     b       1b
 
-2:  mov     x0, x19
+2:  mov     x29, xzr
+    mov     x30, xzr
+    mov     x0, x19
     bl      kernel_main
     b       park
