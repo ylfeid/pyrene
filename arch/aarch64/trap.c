@@ -54,6 +54,13 @@ static int far_valid(unsigned ec)
     }
 }
 
+static void dump_regs(const struct trap_frame *tf)
+{
+    for (unsigned i = 0; i < 31; i++)
+        printk("  x%02u: %016lx%s", i, tf->x[i], (i & 3) == 3 ? "\n" : "");
+    printk("  sp : %016lx\n", tf->sp);
+}
+
 void exceptions_init(void)
 {
     write_sysreg(vbar_el1, (uint64_t)vectors);
@@ -75,5 +82,6 @@ void trap_handler(struct trap_frame *tf, unsigned type)
             printk("  far: %p\n", (void *)far);
     }
     printk("  elr: %p  spsr: 0x%08lx\n", (void *)tf->elr, tf->spsr);
+    dump_regs(tf);
     panic("unhandled exception");
 }
