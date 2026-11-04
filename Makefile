@@ -6,7 +6,7 @@ LD       := ld.lld
 TARGET   := --target=aarch64-none-elf
 
 CFLAGS   := $(TARGET) -std=gnu11 -ffreestanding -fno-builtin -nostdlib -mgeneral-regs-only -mstrict-align \
-            -Wall -Wextra -Werror -O2 -g -Iinclude -MMD -MP -fno-omit-frame-pointer
+            -Wall -Wextra -Werror -O2 -g -Iinclude -MMD -MP -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer
 ASFLAGS  := $(TARGET) -g -Iinclude -MMD -MP
 
 SRCS     := arch/aarch64/boot.S \

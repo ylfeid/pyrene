@@ -7,6 +7,7 @@
 #include "trap.h"
 
 extern char vectors[];
+extern char __stack_bottom[], __stack_top[];
 
 static const char *const vector_names[16] = {
     "sync (el1t)",  "irq (el1t)",  "fiq (el1t)",  "serror (el1t)",
@@ -61,6 +62,28 @@ static void dump_regs(const struct trap_frame *tf)
     printk("  sp : %016lx\n", tf->sp);
 }
 
+static int frame_valid(uint64_t fp)
+{
+    return fp && !(fp & 7) &&
+           fp >= (uint64_t)__stack_bottom && fp + 16 <= (uint64_t)__stack_top;
+}
+
+static void backtrace(uint64_t pc, uint64_t fp)
+{
+    printk("  backtrace:\n");
+    printk("    %p\n", (void *)pc);
+    for (unsigned depth = 0; depth < 32 && frame_valid(fp); depth++) {
+        const uint64_t *frame = (const uint64_t *)fp;
+
+        if (!frame[1])
+            break;
+        printk("    %p\n", (void *)frame[1]);
+        if (frame[0] && frame[0] <= fp)
+            break;
+        fp = frame[0];
+    }
+}
+
 void exceptions_init(void)
 {
     write_sysreg(vbar_el1, (uint64_t)vectors);
@@ -83,5 +106,6 @@ void trap_handler(struct trap_frame *tf, unsigned type)
     }
     printk("  elr: %p  spsr: 0x%08lx\n", (void *)tf->elr, tf->spsr);
     dump_regs(tf);
+    backtrace(tf->elr, tf->x[29]);
     panic("unhandled exception");
 }
