@@ -4,6 +4,7 @@
 #include "panic.h"
 #include "pl011.h"
 #include "printk.h"
+#include "string.h"
 #include "trap.h"
 #include "sysreg.h"
 
@@ -14,6 +15,12 @@ extern char _start[], __kernel_end[];
 static unsigned current_el(void)
 {
     return (read_sysreg(CurrentEL) >> 2) & 3;
+}
+
+static void selftest(const char *bootargs)
+{
+    if (bootargs && strstr(bootargs, "selftest=brk"))
+        __asm__ volatile("brk #0x42");
 }
 
 static void halt(void)
@@ -59,5 +66,6 @@ void kernel_main(uintptr_t dtb)
         printk("  reserved:        %p - %p\n",
                (void *)(uintptr_t)info.reserved[i].base,
                (void *)(uintptr_t)(info.reserved[i].base + info.reserved[i].size));
+    selftest(info.bootargs);
     halt();
 }
