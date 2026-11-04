@@ -17,10 +17,15 @@ static unsigned current_el(void)
     return (read_sysreg(CurrentEL) >> 2) & 3;
 }
 
+static __attribute__((noinline)) void selftest_brk(void)
+{
+    __asm__ volatile("brk #0x42");
+}
+
 static void selftest(const char *bootargs)
 {
     if (bootargs && strstr(bootargs, "selftest=brk"))
-        __asm__ volatile("brk #0x42");
+        selftest_brk();
 }
 
 static void halt(void)
