@@ -13,10 +13,10 @@ Early bring-up. Boots on QEMU `virt` (aarch64), reads its hardware layout from t
 - [x] Boot, early UART console
 - [x] printk
 - [x] Devicetree parsing (RAM, CPUs, UART)
-- [ ] Exceptions
+- [x] Exceptions
   - [x] Vector table and register save/restore
-  - [ ] Syndrome decoding and register dump
-  - [ ] Backtrace
+  - [x] Syndrome decoding and register dump
+  - [x] Backtrace
 - [ ] Physical memory allocator
 - [ ] Virtual memory (MMU)
 - [ ] riscv64 port
