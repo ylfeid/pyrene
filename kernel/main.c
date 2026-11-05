@@ -3,6 +3,7 @@
 #include "devicetree.h"
 #include "panic.h"
 #include "pl011.h"
+#include "pmm.h"
 #include "printk.h"
 #include "string.h"
 #include "trap.h"
@@ -72,6 +73,11 @@ void kernel_main(uintptr_t dtb)
         printk("  reserved:        %p - %p\n",
                (void *)(uintptr_t)info.reserved[i].base,
                (void *)(uintptr_t)(info.reserved[i].base + info.reserved[i].size));
+
+    pmm_init(&info);
+    printk("  memory:          %lu KiB free of %lu KiB\n",
+           pmm_free_pages() * (PAGE_SIZE >> 10), pmm_total_pages() * (PAGE_SIZE >> 10));
+
     selftest(info.bootargs);
     halt();
 }

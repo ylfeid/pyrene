@@ -19,6 +19,7 @@ SRCS     := arch/aarch64/boot.S \
             lib/fdt.c \
             lib/string.c \
             lib/bitmap.c \
+            mm/pmm.c \
             drivers/serial/pl011.c
 
 OBJS     := $(addprefix build/,$(addsuffix .o,$(basename $(SRCS))))
