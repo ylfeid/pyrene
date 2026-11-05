@@ -18,6 +18,7 @@ SRCS     := arch/aarch64/boot.S \
             kernel/devicetree.c \
             lib/fdt.c \
             lib/string.c \
+            lib/bitmap.c \
             drivers/serial/pl011.c
 
 OBJS     := $(addprefix build/,$(addsuffix .o,$(basename $(SRCS))))
