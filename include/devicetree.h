@@ -10,6 +10,7 @@ struct dt_region {
 };
 
 struct dt_info {
+    struct dt_region fdt;
     struct dt_region ram[DT_MAX_REGIONS];
     unsigned nram;
     struct dt_region reserved[DT_MAX_REGIONS];

@@ -85,6 +85,9 @@ int dt_parse(const void *fdt, struct dt_info *info)
     if (fdt_check(fdt))
         return -1;
 
+    info->fdt.base = (uintptr_t)fdt;
+    info->fdt.size = fdt32_to_cpu(((const struct fdt_header *)fdt)->totalsize);
+
     for (unsigned i = 0; info->nreserved < DT_MAX_REGIONS &&
                          !fdt_memreserve(fdt, i, &addr, &size); i++) {
         info->reserved[info->nreserved].base = addr;

@@ -48,6 +48,7 @@ void kernel_main(uintptr_t dtb)
 
     if (dt_parse((const void *)dtb, &info))
         panic("invalid devicetree at %p", (void *)dtb);
+    printk("  dtb size:        %lu bytes\n", info.fdt.size);
 
     if (info.has_uart)
         pl011_init(info.uart_base);
